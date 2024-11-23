@@ -50,7 +50,7 @@ with st.sidebar:
     st.text_input("Host",value="localhost",key="host")
     st.text_input("Port",value="3306",key="port")
     st.text_input("User",value="root",key="user")
-    st.text_input("Password",value="1029Eason",key="password",type="password")
+    st.text_input("Password",value="",key="password",type="password")
     st.text_input("DatabaseName",value="chat_mysql",key="databasename")
 
     if st.button("连接数据库"):
