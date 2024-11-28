@@ -168,14 +168,14 @@ if userQuery is not None and userQuery.strip() != "":
 
     # 将用户的问题添加到最终的聊天历史中
 
-    system_prompt = """
-    你是一位专业的DBA，根据以下<schema>中的表结构，根据用户的问题编写SQL语句，允许使用模糊匹配LINK操作符。
-    <schema> {schema} </schema>
-    """
+    # system_prompt = """
+    # 你是一个智能助手，你
+    # """
 
     response = client.chat.completions.create(
         model=selected_sql_model,
-        messages=[{"role":"system","content":system_prompt},{"role":"user","content":userQuery}],
+        # messages=[{"role":"system","content":system_prompt},{"role":"user","content":userQuery}],
+        messages=[{"role":"user","content":userQuery}],
         tools=TOOLS,
         tool_choice="auto",
     )
