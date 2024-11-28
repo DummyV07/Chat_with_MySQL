@@ -169,7 +169,7 @@ if userQuery is not None and userQuery.strip() != "":
     # 将用户的问题添加到最终的聊天历史中
 
     system_prompt = """
-    你是一位专业的DBA，根据以下<schema>中的表结构，根据用户的问题编写SQL语句，允许使用模糊匹配 LINK操作符。
+    你是一位专业的DBA，根据以下<schema>中的表结构，根据用户的问题编写SQL语句，允许使用模糊匹配LINK操作符。
     <schema> {schema} </schema>
     """
 
