@@ -6,11 +6,13 @@ from pymysql import Connection
 max_iterate  = 5
 
 class PET_SQL:
-    def __init__(self,cilent,question:str,dbConnection:Connection,schema:str):
-        self.client = cilent
+    def __init__(self,client,question:str,dbConnection:Connection,schema:str,selected_sql_model:str,selected_nl_model:str):
+        self.client = client
         self.question = question
         self.schema = schema
         self.dbConnection = dbConnection
+        self.selected_sql_model = selected_sql_model
+        self.selected_nl_model = selected_nl_model
         self.final_sql = ''
         self.iterate = 0
         self.final_result = ''
@@ -26,7 +28,7 @@ class PET_SQL:
         """
         
         response = self.client.chat.completions.create(
-            model="qwen2.5-14b-instruct",
+            model=self.selected_sql_model,
             messages=[{"role":"system","content":sql_system_prompt},{"role":"user","content":self.question}],
 
         )
@@ -60,13 +62,15 @@ class PET_SQL:
         """
 
         response = self.client.chat.completions.create(
-            model="qwen2.5-14b-instruct",
+            model=self.selected_sql_model,
             messages=[{"role":"user","content":sql_user_prompt}],
 
         )
         self.final_sql = response.choices[0].message.content
         print(f"修改：{self.final_sql}")
         return self.final_sql
+
+
     def Post_Calibation(self,final_sql:str)->str:
         
         sql_result = self.execute_sql(final_sql)
@@ -85,11 +89,10 @@ class PET_SQL:
                     return str("很抱歉无法解决您的问题，您可以尝试换个问法或再试一次。")
                 else:
                     self.iterate += 1
-
                     self.main()
         else:
             self.final_result = self.NL_LLM(sql_result)
-            return self.NL_LLM(sql_result)
+            return self.final_result
             
     def check_fuzzy_match(self,sql:str)->bool:
         # 检查模型是否使用了模糊匹配
@@ -101,10 +104,10 @@ class PET_SQL:
         # 未使用模糊匹配，则尝试使用模糊匹配
     
         response = self.client.chat.completions.create(
-            model="qwen2.5-14b-instruct",
+            model=self.selected_sql_model,
             messages=[{"role":"user","content":f"""
 
-            请将下列sql语句，使用LINK操作符修改为模糊匹配的格式。
+            请将下列sql语句，使用LIKE操作符修改为模糊匹配的格式。
             不附加任何额外说明或格式化标记，SQL 语句末尾不加分号。
             sql语句：{sql}
 
@@ -129,7 +132,7 @@ class PET_SQL:
     def check_sql_result(self,sql_result: str) -> bool:
         # 检查结果是否报错
         response = self.client.chat.completions.create(
-            model="qwen2.5-14b-instruct",
+            model=self.selected_nl_model,
             messages=[{"role":"user","content":f"""
                 
                 判断
@@ -152,9 +155,10 @@ class PET_SQL:
                     }],
 
         )
-        if response.choices[0].message.content == 'true':
+        content = response.choices[0].message.content.strip().lower()
+        if content == 'true':
             return True
-        elif response.choices[0].message.content == 'false':
+        elif content  == 'false':
             return False
         else:
             return self.check_sql_result(sql_result)
@@ -181,13 +185,15 @@ class PET_SQL:
         """
 
         finally_response = self.client.chat.completions.create(
-            model="qwen2.5-14b-instruct",
+            model=self.selected_nl_model,
             messages=[{"role":"system","content":system_prompt},
                        {"role":"user","content":user_prompt}],
 
         )
-            
+        
+        print("*"*40)
         print(finally_response.choices[0].message.content)
+        print("*"*40)
         
         return finally_response.choices[0].message.content 
     def main(self):

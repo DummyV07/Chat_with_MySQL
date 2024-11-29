@@ -32,10 +32,10 @@ client = OpenAI(
 
 from PET_UTILS import *
 # TOOLS 功能
-def search_mysql(schema,dbConnection,question:str) -> str:
+def search_mysql(schema,dbConnection,question:str,selected_sql_model:str,selected_nl_model:str) -> str:
 
     print(f"初始问题{question}")
 
-    PET = PET_SQL(client,question,dbConnection,schema)
+    PET = PET_SQL(client,question,dbConnection,schema,selected_sql_model,selected_nl_model)
 
     return PET.main()

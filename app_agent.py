@@ -186,8 +186,8 @@ if userQuery is not None and userQuery.strip() != "":
             function_args = json.loads(tool_call.function.arguments)
 
             if function_name == "search_mysql":
-                final_response = search_mysql(get_db_schema(st.session_state.dbConnection, DATABASENAME),st.session_state.dbConnection,function_args["question"])
-                print(function_name)
+                final_response = search_mysql(get_db_schema(st.session_state.dbConnection, DATABASENAME),st.session_state.dbConnection,function_args["question"],selected_sql_model,selected_nl_model)
+                # print(function_name)
     else:
         final_response = response.choices[0].message.content
         
