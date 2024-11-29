@@ -11,11 +11,15 @@ app_only_sql.py 是只返回sql语句的版本
 可视化效果：
 ![alt text](./image/image-1.png)
 
-appv1.py 是返回sql语句和自然语言响应的版本,但目前存在一些问题，比如sql语句错误，自然语言尝试修改正确的sql语句。
+app_normal.py 是返回sql语句和自然语言响应的版本,但目前存在一些问题，比如sql语句错误，自然语言尝试修改正确的sql语句。
+
+app_agent.py 是agent版本，功能基本完成，但propmt仍然需要进行优化
 
 tool.py 工具函数
 
-app_agent.py 是agent版本，功能基本完成，但propmt仍然需要进行优化
+
+
+
 
 
 

@@ -28,8 +28,6 @@ client = OpenAI(
     api_key=DASHSCOPE_API_KEY,
 
 )
-
-
               
 
 from PET_UTILS import *
