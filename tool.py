@@ -28,12 +28,17 @@ client = OpenAI(
     api_key=DASHSCOPE_API_KEY,
 
 )
+import datetime
+def get_date_time():
+    return datetime.datetime.now()
               
 
 from PET_UTILS import *
 # TOOLS 功能
-def search_mysql(schema,dbConnection,question:str,selected_sql_model:str,selected_nl_model:str) -> str:
-
+def search_mysql(dbConnection,question:str,selected_sql_model:str,selected_nl_model:str) -> str:
+    # 读取 schema_ouput.txt 文件获取 schema 信息
+    with open('schema_output.txt', 'r', encoding='utf-8') as file:
+        schema = file.read()
     print(f"初始问题{question}")
 
     PET = PET_SQL(client,question,dbConnection,schema,selected_sql_model,selected_nl_model)

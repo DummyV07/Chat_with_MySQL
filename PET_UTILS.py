@@ -5,10 +5,13 @@ from pymysql import Connection
 # 最大迭代次数
 max_iterate  = 5
 
+import datetime
+date_time = datetime.datetime.now()
+
 class PET_SQL:
     def __init__(self,client,question:str,dbConnection:Connection,schema:str,selected_sql_model:str,selected_nl_model:str):
         self.client = client
-        self.question = question
+        self.question = "当前日期及时间：" + str(date_time) + "请问" + question # 这里做里一个quary优化，以告诉模型当前时间
         self.schema = schema
         self.dbConnection = dbConnection
         self.selected_sql_model = selected_sql_model
