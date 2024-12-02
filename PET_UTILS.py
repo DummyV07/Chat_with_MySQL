@@ -48,8 +48,11 @@ class PET_SQL:
 
             你是一位经验丰富的数据库管理员 (DBA)。请根据以下 <schema> 提供的表结构信息，仔细审查 <sql> 查询中的字段和表名，确保所有字段和表都正确无误。
             若发现问题，请根据表结构修正错误并返回修改后的 SQL 语句。
-
+            
             要求：
+            只返回sql语句即可，不需要其他内容。
+            只返回sql语句即可，不需要其他内容。
+            只返回sql语句即可，不需要其他内容。
 
             仅使用 <schema> 中存在的表和字段。
             若由于原始查询意图不明确，可根据用户问题<question>查询语句修改，返回粗略查询的sql语句,
@@ -67,6 +70,9 @@ class PET_SQL:
         response = self.client.chat.completions.create(
             model=self.selected_sql_model,
             messages=[{"role":"user","content":sql_user_prompt}],
+            temperature=0,
+            max_tokens=1024,
+
 
         )
         self.final_sql = response.choices[0].message.content
