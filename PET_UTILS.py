@@ -11,7 +11,7 @@ date_time = datetime.datetime.now()
 class PET_SQL:
     def __init__(self,client,question:str,dbConnection:Connection,schema:str,selected_sql_model:str,selected_nl_model:str):
         self.client = client
-        self.question = "当前日期及时间：" + str(date_time) + "请问" + question # 这里做里一个quary优化，以告诉模型当前时间
+        self.question =  question # 这里做里一个quary优化，以告诉模型当前时间
         self.schema = schema
         self.dbConnection = dbConnection
         self.selected_sql_model = selected_sql_model
@@ -19,7 +19,32 @@ class PET_SQL:
         self.final_sql = ''
         self.iterate = 0
         self.final_result = ''
-        
+    def quary_optimization(self)->str:     
+        # 根据表结构先做一个初步的quary优化；
+
+        system_prompt = f"""
+        你精通汉语言文学以及数据库相关知识，你需要根据数据库结构，对用户的问题进行优化，并返回一个更精确的句子。
+        表结构如下：{self.schema}
+       
+        示例：
+        将“在表中查找所有年龄大于30岁的员工”改为“在表中查找所有年龄大于30岁的员工，并返回其姓名和年龄”等。
+        """
+
+        user_prompt = f"""
+        请根据用户问题，对句子进行优化。
+        当前日期及时间：{date_time}，请根据当前时间，对用户问题进行优化。
+        用户问题：{self.question}
+
+        注意你只需要返回优化后的句子，不需要其他的注释说明。
+        """
+
+        response = self.client.chat.completions.create(
+            model=self.selected_nl_model,
+            messages=[{"role":"system","content":system_prompt},{"role":"user","content":user_prompt}],
+        )
+        print(f"quary优化：{response.choices[0].message.content}")  
+        self.question = response.choices[0].message.content
+        return response.choices[0].message.content
     def Pre_Process(self)->str:
         # 首先生成一个粗略的sql语句
         sql_system_prompt = f"""
@@ -206,6 +231,7 @@ class PET_SQL:
         
         return finally_response.choices[0].message.content 
     def main(self):
+        self.quary_optimization()
         pre_sql = self.Pre_Process()
         self.final_sql = self.Sql_Generate(pre_sql)
         
