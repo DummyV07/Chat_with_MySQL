@@ -7,7 +7,7 @@ max_iterate  = 5
 
 import datetime
 date_time = datetime.datetime.now()
-
+import time
 class PET_SQL:
     def __init__(self,client,question:str,dbConnection:Connection,schema:str,selected_sql_model:str,selected_nl_model:str):
         self.client = client
@@ -231,16 +231,24 @@ class PET_SQL:
         
         return finally_response.choices[0].message.content 
     def main(self):
+        # 统计运行时间
+        start_time = time.time()
+        
+        # 进行quary优化
         self.quary_optimization()
         pre_sql = self.Pre_Process()
         self.final_sql = self.Sql_Generate(pre_sql)
         
         temp = self.Post_Calibation(self.final_sql)
 
+        end_time = time.time()
+
+        print(f"运行时间：{end_time - start_time}秒")
         if temp == None:
             return self.final_result
         else:
             return temp
+        
         
 
 
