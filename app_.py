@@ -172,10 +172,17 @@ if userQuery is not None and userQuery.strip() != "":
     # 你是一个智能助手，你
     # """
 
+    # response = client.chat.completions.create(
+    #     model=selected_sql_model,
+    #     # messages=[{"role":"system","content":system_prompt},{"role":"user","content":userQuery}],
+    #     messages=[{"role":"user","content":userQuery}],
+    #     tools=TOOLS,
+    #     tool_choice="auto",
+    # )
+
     response = client.chat.completions.create(
         model=selected_sql_model,
-        # messages=[{"role":"system","content":system_prompt},{"role":"user","content":userQuery}],
-        messages=[{"role":"user","content":userQuery}],
+        messages=st.session_state.chat_history,
         tools=TOOLS,
         tool_choice="auto",
     )
@@ -187,7 +194,10 @@ if userQuery is not None and userQuery.strip() != "":
 
             if function_name == "search_mysql":
                 final_response = search_mysql(st.session_state.dbConnection,function_args["question"],selected_sql_model,selected_nl_model)
-                # print(function_name)
+                print('当前问题为：')
+                print(function_args["question"])
+                print('*'*80)
+
 
     else:
         final_response = response.choices[0].message.content

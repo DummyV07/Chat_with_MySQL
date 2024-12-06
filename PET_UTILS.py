@@ -3,10 +3,10 @@
 from pymysql import Connection
 
 # 最大迭代次数
-max_iterate  = 5
+max_iterate  = 2
 
 import datetime
-date_time = datetime.datetime.now()
+date_time = datetime.date.today()
 import time
 class PET_SQL:
     def __init__(self,client,question:str,dbConnection:Connection,schema:str,selected_sql_model:str,selected_nl_model:str):
@@ -23,7 +23,7 @@ class PET_SQL:
         # 根据表结构先做一个初步的quary优化；
 
         system_prompt = f"""
-        你精通汉语言文学以及数据库相关知识，你需要根据数据库结构，对用户的问题进行优化，并返回一个更精确的句子。
+        你精通汉语言文学以及数据库相关知识，你需要根据数据库结构，对用户的问题进行优化，以便后面的模型在使用问题生成sql语句的时候返回更多的信息，供用户参考。
         表结构如下：{self.schema}
        
         示例：
@@ -75,10 +75,7 @@ class PET_SQL:
             若发现问题，请根据表结构修正错误并返回修改后的 SQL 语句。
             
             要求：
-            只返回sql语句即可，不需要其他内容。
-            只返回sql语句即可，不需要其他内容。
-            只返回sql语句即可，不需要其他内容。
-
+            只返回sql语句即可，不需要任何注释或符号。
             仅使用 <schema> 中存在的表和字段。
             若由于原始查询意图不明确，可根据用户问题<question>查询语句修改，返回粗略查询的sql语句,
             但必须确保语句的合法性，以及返回结果的合理性。
