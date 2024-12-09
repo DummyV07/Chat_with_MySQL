@@ -28,6 +28,12 @@ client = OpenAI(
     api_key=DASHSCOPE_API_KEY,
 
 )
+# 调用百xinference的api
+# client = OpenAI(
+#     base_url=BASE_URL_Xinference,
+#     api_key="sk-xxx",
+
+# )
 import datetime
 def get_date_time():
     return datetime.datetime.now()

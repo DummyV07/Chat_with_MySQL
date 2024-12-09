@@ -13,6 +13,12 @@ client = OpenAI(
     base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
 )
 
+# client = OpenAI(
+#     base_url=BASE_URL_Xinference,
+#     api_key="sk-xxx",
+
+# )
+
 def init_db(host:str,port:str,user:str,password:str,database:str) -> Connection:
     return Connection(host=host,port=int(port),user=user,password=password,database=database)
 
